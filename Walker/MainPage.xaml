@@ -1,0 +1,159 @@
+﻿<Page xmlns:chart="using:Syncfusion.UI.Xaml.Charts" 
+    x:Class="Walker.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Walker"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <!--Template for series data labels-->
+        <DataTemplate x:Key="labelTemplate1">
+            <Grid>
+                <Rectangle Stroke="White" Fill="Red" 
+                               StrokeThickness="1">
+                </Rectangle>
+                <TextBlock Margin="6,3,6,3" HorizontalAlignment="Center" VerticalAlignment="Top"
+                               FontSize="12" Foreground="White"
+                               Text="{Binding YData}" />
+            </Grid>
+        </DataTemplate>
+
+        <!--Template for tooltip-->
+        <DataTemplate x:Key="TooltipTemplate">
+            <Grid IsHitTestVisible="False">
+                <Rectangle Stroke="White" Fill="{Binding Interior}" StrokeThickness="1">
+                </Rectangle>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Margin="5,3,5,3" HorizontalAlignment="Center" VerticalAlignment="Top"
+                                   FontSize="11" Foreground="White" IsHitTestVisible="False"
+                                   Text="{Binding Item.Result}" />
+                    <TextBlock Margin="5,3,5,3" HorizontalAlignment="Center" VerticalAlignment="Top"
+                                   FontSize="11" Foreground="White" Text=":" />
+                    <TextBlock Margin="5,3,5,3" IsHitTestVisible="False" HorizontalAlignment="Center"
+                                   VerticalAlignment="Top" FontSize="11" Foreground="White"
+                                   Text="{Binding YData}" />
+
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Hub Background="White" Header="Walker">
+        <HubSection Width="300" Header="Today" x:Name="hubToday">
+            <DataTemplate>
+                <StackPanel Padding="5">
+                    <TextBlock Text="" x:Name="txbTodaySteps" TextWrapping="Wrap" />
+                    <chart:SfChart3D  x:Name="chartToday" Depth="20" WallSize="5" Tilt="-30" Rotation="-30" HorizontalAlignment="Center" Height="300" Width="300">
+                        <chart:SfChart3D.Header>
+                            <TextBlock FontSize="16" Foreground="Black" FontFamily="Segoe UI" Margin="0,20,0,10" Text="Today's results"/>
+                        </chart:SfChart3D.Header>
+
+                        <chart:SfChart3D.Legend>
+                            <chart:ChartLegend/>
+                        </chart:SfChart3D.Legend>
+                        
+                        <chart:SfChart3D.PrimaryAxis>
+                            <chart:CategoryAxis3D></chart:CategoryAxis3D>
+                        </chart:SfChart3D.PrimaryAxis>
+
+                        <chart:SfChart3D.SecondaryAxis>
+                            <chart:NumericalAxis3D></chart:NumericalAxis3D>
+                        </chart:SfChart3D.SecondaryAxis>
+
+                        <chart:DoughnutSeries3D x:Name="pieSeries" Palette="Custom" ExplodeOnMouseClick="True" 
+                                    LabelPosition="Outside" TooltipTemplate="{StaticResource TooltipTemplate}" 
+                                    ShowTooltip="True" chart:ChartTooltip.EnableAnimation="True" 
+                                    XBindingPath="Result" Label="Results" YBindingPath="Count" ExplodeAll="True">
+                            <chart:DoughnutSeries3D.ColorModel>
+                                <chart:ChartColorModel>
+                                    <chart:ChartColorModel.CustomBrushes>
+                                        <SolidColorBrush Color="#006632"/>
+                                        <SolidColorBrush Color="#F86755"/>
+                                    </chart:ChartColorModel.CustomBrushes>
+                                </chart:ChartColorModel>
+                            </chart:DoughnutSeries3D.ColorModel>
+                            <chart:DoughnutSeries3D.AdornmentsInfo>
+                                <chart:ChartAdornmentInfo3D SegmentLabelContent="LabelContentPath" AdornmentsPosition="TopAndBottom"
+                                                HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                                ShowConnectorLine="False" UseSeriesPalette="True"
+                                                SegmentLabelFormat="0"
+                                                ShowLabel="True"  LabelTemplate="{StaticResource labelTemplate1}">
+                                </chart:ChartAdornmentInfo3D>
+                            </chart:DoughnutSeries3D.AdornmentsInfo>
+                        </chart:DoughnutSeries3D>
+                    </chart:SfChart3D>
+
+                    <Button x:Name="btnSettings" Foreground="Black" Tapped="btnSettings_Tapped" ToolTipService.ToolTip="Settings" Margin="10">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <SymbolIcon Symbol="Setting" Margin="5"/>
+                                <TextBlock Text="Go to Settings" Margin="5"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
+            </DataTemplate>
+        </HubSection>
+        <HubSection MinWidth="300" Header="History" x:Name="hubHistory">
+            <DataTemplate>
+                <StackPanel Padding="5">
+                    <chart:SfChart x:Name="chartWeek" HorizontalAlignment="Center" Height="250" Width="350">
+                        <chart:SfChart.Resources>
+                            <DataTemplate x:Key="labeltemplate">
+                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top"
+                               FontSize="12" Foreground="Blue" Text="{Binding}" />
+                            </DataTemplate>
+                        </chart:SfChart.Resources>
+                        <chart:SfChart.Header>
+                            <TextBlock FontSize="16" Foreground="Black" FontFamily="Segoe UI" Margin="0,20,0,10" Text="This week's results"/>
+                        </chart:SfChart.Header>
+
+                        <chart:SfChart.SecondaryAxis>
+                            <chart:NumericalAxis Header="Total Steps"/>
+                        </chart:SfChart.SecondaryAxis>
+
+                        <chart:BarSeries x:Name="weekSeries" Stroke="Green" StrokeThickness="2" Interior="LightBlue" XBindingPath="Result" YBindingPath="Count">
+                            <chart:BarSeries.AdornmentsInfo>
+                                <chart:ChartAdornmentInfo AdornmentsPosition="Top" ShowLabel="True" SegmentLabelContent="YValue"  SegmentLabelFormat="#"  ShowMarker="True" Symbol="Ellipse" LabelTemplate="{StaticResource labeltemplate}" SymbolWidth="20" SymbolHeight="20" SymbolInterior="Red"/>
+                            </chart:BarSeries.AdornmentsInfo>
+                        </chart:BarSeries>
+
+                    </chart:SfChart>
+
+                    <chart:SfChart x:Name="chartMonth" HorizontalAlignment="Center" Height="250" Width="350" Margin="10">
+                        <chart:SfChart.Resources>
+                            <DataTemplate x:Key="labeltemplate">
+                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top"
+                               FontSize="12" Foreground="White" Text="{Binding}" />
+                            </DataTemplate>
+                        </chart:SfChart.Resources>
+                        
+                        <chart:SfChart.Header>
+                            <TextBlock FontSize="16" Foreground="Black" FontFamily="Segoe UI" Margin="0,20,0,10" Text="This month's results"/>
+                        </chart:SfChart.Header>
+
+                        <chart:SfChart.SecondaryAxis>
+                            <chart:NumericalAxis Header="Total Steps"/>
+                        </chart:SfChart.SecondaryAxis>
+
+                        <chart:ColumnSeries x:Name="lineSeries" Palette="GreenChrome" StrokeThickness="2" XBindingPath="Result" YBindingPath="Count">
+                            <chart:ColumnSeries.AdornmentsInfo>
+                                <chart:ChartAdornmentInfo Margin="10" AdornmentsPosition="TopAndBottom" ShowLabel="True" SegmentLabelContent="YValue"  SegmentLabelFormat="#"  ShowMarker="True" Symbol="Ellipse" LabelTemplate="{StaticResource labeltemplate}" SymbolWidth="20" SymbolHeight="20" SymbolInterior="Red"/>
+                            </chart:ColumnSeries.AdornmentsInfo>
+                        </chart:ColumnSeries>
+
+                    </chart:SfChart>
+                </StackPanel>
+            </DataTemplate>
+        </HubSection>
+        <HubSection MinWidth="300" Header="Acerca de" x:Name="hubAcercaDe">
+            <DataTemplate>
+                <StackPanel Padding="5">
+
+                </StackPanel>
+            </DataTemplate>
+        </HubSection>
+    </Hub>
+</Page>

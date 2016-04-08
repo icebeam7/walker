@@ -1,0 +1,120 @@
+﻿<Page xmlns:Input="using:Syncfusion.UI.Xaml.Controls.Input" 
+    x:Class="Walker.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Walker"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <Flyout x:Key="FlyoutVerify" x:Name="flyVerify">
+            <Border BorderBrush="Black" BorderThickness="2">
+                <StackPanel>
+                    <TextBlock x:Name="txbDirections" Text="A validation code was sent to your phone number. Please write it down." FontSize="12" Margin="0, 5"/>
+                    
+                    <StackPanel Background="LightBlue" Orientation="Horizontal" Padding="5">
+                        <Input:SfTextBoxExt Width="150" x:Name="txtCode" InputScope="NumericPin" Margin="0, 0, 5, 0">
+                            <Input:SfTextBoxExt.Watermark>
+                                <StackPanel Orientation="Horizontal">
+                                    <SymbolIcon Symbol="Permissions" Opacity="0.5" Margin="0,0,5,0"/>
+                                    <TextBlock Text="Walker code" Opacity="0.5" Margin="5 2"/>
+                                </StackPanel>
+                            </Input:SfTextBoxExt.Watermark>
+                        </Input:SfTextBoxExt>
+                        <Button x:Name="btnValidateCode" Foreground="White" Tapped="btnValidateCode_Tapped" ToolTipService.ToolTip="Validate" Margin="0, 0, 5, 0">
+                            <Button.Content>
+                                <SymbolIcon Symbol="Send"/>
+                            </Button.Content>
+                        </Button>
+                        <Button x:Name="btnResendCode" Foreground="White" Tapped="btnResendCode_Tapped" ToolTipService.ToolTip="Resend code" Margin="0, 0, 5, 0">
+                            <Button.Content>
+                                <SymbolIcon Symbol="Refresh"/>
+                            </Button.Content>
+                        </Button>
+                        <Button x:Name="btnCancel" Foreground="White" Tapped="btnCancel_Tapped" ToolTipService.ToolTip="Cancel" Margin="0, 0, 5, 0">
+                            <Button.Content>
+                                <SymbolIcon Symbol="Cancel"/>
+                            </Button.Content>
+                        </Button>
+                    </StackPanel>
+
+                    <TextBlock x:Name="txbMessage" Text="The validation code is wrong. Please try again" FontSize="12" Foreground="Red" Margin="0, 5" Visibility="Collapsed"/>
+                </StackPanel>
+            </Border>
+        </Flyout>
+    </Page.Resources>
+    
+    <StackPanel Background="White" Padding="5">
+        <TextBlock Text="Settings" FontSize="48" Foreground="Black" Margin="0,5"/>
+
+        <StackPanel Orientation="Horizontal" Margin="0,5">
+            <Input:SfTextBoxExt Width="250" x:Name="txtPhoneNumber" InputScope="TelephoneNumber" HorizontalAlignment="Left" LostFocus="txtPhoneNumber_LostFocus">
+                <Input:SfTextBoxExt.Watermark>
+                    <StackPanel Orientation="Horizontal">
+                        <SymbolIcon Symbol="Phone" Opacity="0.5" Margin="0,0,5,0"/>
+                        <TextBlock Text="Your phone number" Opacity="0.5" Margin="5 2"/>
+                    </StackPanel>
+                </Input:SfTextBoxExt.Watermark>
+            </Input:SfTextBoxExt>
+
+            <Image x:Name="imgVerify" Source="Assets/verify.png" Width="32" Height="32" Margin="5,0" Tapped="imgVerify_Tapped" FlyoutBase.AttachedFlyout="{StaticResource FlyoutVerify}"/>
+            <Image x:Name="imgVerified" ToolTipService.ToolTip="Verified" Source="Assets/verified.png" Width="24" Height="24" Margin="5,0" VerticalAlignment="Center" />
+
+        </StackPanel>
+
+        <TimePicker x:Name="tmpStart" Header="Walker can track my steps from" Margin="0,5" TimeChanged="tmpStart_TimeChanged" />
+        <TimePicker x:Name="tmpEnd" Header="to" Margin="0,0,0,5" TimeChanged="tmpEnd_TimeChanged" />
+
+        <StackPanel Orientation="Horizontal" Margin="0,5">
+            <ComboBox x:Name="cbxInterval" Header="Remind me to walk every" Width="250" HorizontalAlignment="Left" PlaceholderText="(select)" SelectionChanged="cbxInterval_SelectionChanged">
+                <ComboBoxItem Content="minute"/>
+                <ComboBoxItem Content="5 minutes"/>
+                <ComboBoxItem Content="15 minutes"/>
+                <ComboBoxItem Content="hour"/>
+                <ComboBoxItem Content="two hours"/>
+            </ComboBox>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Margin="0,5">
+            <TextBlock Text="if I don't reach my goal, which is" Foreground="Black" VerticalAlignment="Center"/>
+            <TextBox x:Name="txtSteps" Width="65" InputScope="NumericPin" Margin="5,0"/>
+            <TextBlock Text="steps" Foreground="Black" VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Margin="0,5">
+            <ComboBox x:Name="cbxReminderType" Header="Walker can remind me to reach my goal by " Width="350" HorizontalAlignment="Left" PlaceholderText="(select)" SelectionChanged="cbxReminderType_SelectionChanged">
+                <ComboBoxItem Content="calling me"/>
+                <ComboBoxItem Content="sending me an SMS"/>
+                <ComboBoxItem Content="sending me an Email"/>
+            </ComboBox>
+            <TextBlock Text=" hour(s)" Foreground="Black" Margin="5" VerticalAlignment="Bottom"/>
+        </StackPanel>
+
+        <Line Margin="10" StrokeThickness="2" Stroke="Black" X1="0" X2="300" HorizontalAlignment="Center" />
+
+        <RichTextBlock FontSize="12">
+            <Paragraph>
+                <Run Text="This app only works if you register a Microsoft Band, enable a background task and verify your phone number."/>
+            </Paragraph>
+        </RichTextBlock>
+
+    </StackPanel>
+
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarToggleButton x:Name="btnRegisterMSBand" Label="Register Microsoft Band" Checked="btnRegisterMSBand_Checked" Unchecked="btnRegisterMSBand_Unchecked">
+                <AppBarToggleButton.Icon>
+                    <BitmapIcon UriSource="Assets/msband.png" />
+                </AppBarToggleButton.Icon>
+            </AppBarToggleButton>
+            <AppBarToggleButton x:Name="btnEnableBackgroundTask" Label="Enable Background Task" Checked="btnEnableBackgroundTask_Checked" Unchecked="btnEnableBackgroundTask_Unchecked">
+                <AppBarToggleButton.Icon>
+                    <BitmapIcon UriSource="/Assets/background.png" />
+                </AppBarToggleButton.Icon>
+            </AppBarToggleButton>
+            <AppBarSeparator />
+            <AppBarButton x:Name="btnSave" Label="Save" Icon="Save" Tapped="btnSave_Tapped"/>
+        </CommandBar>
+    </Page.BottomAppBar>
+</Page>
